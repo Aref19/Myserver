@@ -2,14 +2,20 @@ package com.example.myserver;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,34 +23,36 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class MainActivity extends AppCompatActivity {
+    Fragment fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.main_nav);
+        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
+        fragment=new Home();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame,fragment).commit();
     }
 
-    public void brobe(View view) {
-        FirebaseFirestore fR = FirebaseFirestore.getInstance();
-        DocumentReference documentReference=fR.collection("benutzer").document(
-                "KOjDQiqw38OnEKgEkTLS5EQvl6O2"
-        );
-        Map<String,Object> benutz=new HashMap<>();
-        benutz.put("name","aref");
-
-        documentReference.set(benutz).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(MainActivity.this, "dsa", Toast.LENGTH_SHORT).show();
+    private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.home:
+                    fragment = new Home();
+                    break;
+                case R.id.work:
+                    fragment=new Work();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame,fragment).commit();
+            return true;
+        }
+    };
 
-                Toast.makeText(MainActivity.this, "fal"+e, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+
 }

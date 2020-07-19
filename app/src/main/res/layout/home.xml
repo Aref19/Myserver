@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:hint="name"/>
+    <EditText
+        android:id="@+id/des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="name"/>
+        <ImageView
+
+            android:id="@+id/uploudimage"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:src="@drawable/ic_baseline_image_24"
+
+            />
+        <EditText
+             android:id="@+id/preis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Preis"
+            android:gravity="center"></EditText>
+        <Button
+            android:id="@+id/fotouplod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="fotohochladen"></Button>
+        <Button
+            android:id="@+id/schek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="schicken"
+            android:onClick="brobe"/>
+    </LinearLayout>
+</RelativeLayout>
