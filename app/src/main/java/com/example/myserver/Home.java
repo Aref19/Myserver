@@ -73,6 +73,7 @@ public class Home extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+
         if (view.getId() == R.id.uploudimage) {
             imageholen();
         } else if (view.getId() == R.id.schek) {
@@ -83,17 +84,9 @@ public class Home extends Fragment implements View.OnClickListener {
 
         }
 
+
     }
 
-    private class Hochschecke extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-
-            return null;
-        }
-    }
 
     private void imageStroge() {
 
@@ -168,23 +161,24 @@ public class Home extends Fragment implements View.OnClickListener {
                 Log.i("aref", "onDataChange: ");
                 int i = (int) j + 1;
                 Choildern choildern = new Choildern();
-                String imagnum="im"+i+"ge";
+                String imagnum = "im" + i + "ge";
 
                 Uri[] imges = new Uri[(int) dataSnapshot.getChildrenCount()];
                 String[] daten;
                 String gesmtdata = "";
 
                 for (int v = 1; v <= imges.length; v++) {
-                    String s = "im"+v+"ge";
+                    String s = "im" + v + "ge";
                     gesmtdata = dataSnapshot.child(s).getValue().toString();
-                    Log.i("gesamt", "onDataChange: "+gesmtdata);
-                    Log.i("TAGgg1", "onDataChange: "+gesmtdata.contains(name.getText().toString().toLowerCase().trim()));
-                    if(gesmtdata.contains(name.getText().toString().toLowerCase().trim())){
-                        Log.i("TAGgg", "onDataChange: "+gesmtdata.contains(name.getText().toString().toLowerCase().trim()));
-                        choildern.child(s, image, name.getText().toString(), des.getText().toString(), context,preis.getText().toString());
+                    Log.i("gesamt", "onDataChange: " + gesmtdata);
+                    Log.i("TAGgg1", "onDataChange: " + gesmtdata.contains(name.getText().toString().toLowerCase().trim()));
+                    if (gesmtdata.contains(name.getText().toString().toLowerCase().trim())) {
+                        Log.i("TAGgg", "onDataChange: " + gesmtdata.contains(name.getText().toString().toLowerCase().trim()));
+                        choildern.child(s, image, name.getText().toString(), des.getText().toString(), context, preis.getText().toString());
 
-                    }else {Log.i("MaG", "onDataChange: "+gesmtdata.contains(name.getText().toString().toLowerCase().trim()));
-                        choildern.child(imagnum, image, name.getText().toString(), des.getText().toString(), context,preis.getText().toString());
+                    } else {
+                        Log.i("MaG", "onDataChange: " + gesmtdata.contains(name.getText().toString().toLowerCase().trim()));
+                        choildern.child(imagnum, image, name.getText().toString(), des.getText().toString(), context, preis.getText().toString());
 
                     }
                 }
@@ -232,7 +226,7 @@ class Choildern {
 
     static void uploudData() {
         try {
-            Log.i("num", "uploudData: "+num);
+            Log.i("num", "uploudData: " + num);
             if (mes != null) {
                 FirebaseDatabase.getInstance().getReference().child("images").child(num).setValue(">" + (name.toLowerCase()) + ">" + des + ">" + mes);
                 FirebaseDatabase.getInstance().getReference().child("images2").child(name.toLowerCase()).setValue((name.toLowerCase()) + ">" + des + ">" + mes);
