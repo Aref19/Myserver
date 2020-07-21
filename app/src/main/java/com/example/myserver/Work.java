@@ -21,13 +21,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Work extends Fragment implements ListView.OnLongClickListener , View.OnClickListener{
     View view;
     ListView listView;
     ArrayList<String>name;
+    ArrayList<Forderung>forRequ;
+    ArrayList<Person>forPerson;
+    ArrayList<String>namePerson;
     Button button;
     @Nullable
     @Override
@@ -57,10 +63,15 @@ public class Work extends Fragment implements ListView.OnLongClickListener , Vie
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                 String id=dataSnapshot.getValue().toString();
-                Log.i("req", "onDataChange: "+id);
+                 Iterable<DataSnapshot> id=dataSnapshot.getChildren();
+                String name="";
+               for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren() ){
+                    name+=dataSnapshot1.getKey()+"-";
+                   Log.i("name", "onDataChange: "+name);
 
-
+               }
+               String [] key=name.split("-");
+               forderung(key);
                 //name.add(forderung.getName());
                 //ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,name);
                 //listView.setAdapter(arrayAdapter);
@@ -79,21 +90,53 @@ public class Work extends Fragment implements ListView.OnLongClickListener , Vie
     }
 
 
-    private void forderung(){
+    private void forderung(final String [] keys){
         final FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference=firebaseDatabase.getReference().child("Reqest").child("SCAm3KbOkzNS4Y6wL1tWPhrsxwv2");
+        int i=0;
+        forRequ=new ArrayList<>();
+        forPerson=new ArrayList<>();
+        namePerson=new ArrayList<>();
+        Log.i("keys", "forderung: "+keys.length);
+        do {
+            Log.i("keys", "forderung: "+keys[1]);
+        DatabaseReference databaseReference=firebaseDatabase.getReference().child("Reqest").child(keys[i]);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Forderung forderung=new Forderung();
-                long anzahl=  dataSnapshot.child("forderung").getChildrenCount();
-                forderung=  dataSnapshot.child("forderung").child("0").getValue(Forderung.class);
-                Log.i("data", "onDataChange: "+forderung.getName());
+                int j=0;
+                Forderung [] arrayforderung;
+                Map<String, Forderung[]> stringForderungMap=new HashMap<>();
+                Person person=new Person();
+                person = dataSnapshot.getValue(Person.class);
+                forPerson.add(person);
+                namePerson.add(person.getName());
+                String name=person.getName();
+                ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,namePerson);
+                listView.setAdapter(arrayAdapter);
+                int anzahl=(int)dataSnapshot.child("forderung").getChildrenCount();
+                 arrayforderung=new Forderung[anzahl];
+                 for (int i=0;i<anzahl;i++){
+                     Forderung forderung=new Forderung();
+                     forderung=  dataSnapshot.child("forderung").child(String.valueOf(i)).getValue(Forderung.class);
+                     forRequ.add(forderung);
+                     arrayforderung[i]=forderung;
+                     Log.i("i", "onDataChange: "+i);
+                     if(anzahl==(i+1)){
+                         stringForderungMap.put(name,arrayforderung);
+
+                     }
+
+                 }
+                 j++;
+
 
                 //name.add(forderung.getName());
                 //ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,name);
                 //listView.setAdapter(arrayAdapter);
-            }
+
+        }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -101,6 +144,9 @@ public class Work extends Fragment implements ListView.OnLongClickListener , Vie
 
             }
         });
+        i++;
+
+        }while (keys.length>i);
 
 
     }
