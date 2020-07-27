@@ -2,9 +2,11 @@ package com.example.myserver;
 
 public class Person {
     String name;
+    String Email;
     String strasse;
     String haus;
     String plz;
+
 
     public String getStrasse() {
         return strasse;
@@ -20,5 +22,9 @@ public class Person {
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return Email;
     }
 }

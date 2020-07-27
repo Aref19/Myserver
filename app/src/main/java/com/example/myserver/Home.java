@@ -55,7 +55,6 @@ public class Home extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.home, container, false);
-
         Button button = view.findViewById(R.id.schek);
         Button fotohoch = view.findViewById(R.id.fotouplod);
         imageView = view.findViewById(R.id.uploudimage);
