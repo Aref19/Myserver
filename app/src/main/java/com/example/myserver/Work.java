@@ -1,15 +1,18 @@
 package com.example.myserver;
 
+import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,7 +23,6 @@ import com.example.myserver.Save.DataBestellung;
 import com.example.myserver.Save.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,74 +31,65 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class Work extends Fragment implements  View.OnClickListener{
+public class Work extends Fragment implements ListView.OnItemLongClickListener {
     View view;
     ListView listView;
-    ArrayList<String>name;
-    ArrayList<Forderung>forRequ;
-    ArrayList<Person>forPerson;
-    ArrayList<String>namePerson;
-    Button button,button1;
-    Database  database;
+    ArrayList<String> lsitper;
+
+    Button button, button1;
+    Database database;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.work,container,false);
-        listView=view.findViewById(R.id.nameofperson);
-        button=view.findViewById(R.id.click);
-        button1=view.findViewById(R.id.button);
-        button1.setOnClickListener(this);
-        name=new ArrayList<>();
-        requestholen();
-        database=Database.getInstance(view.getContext());
+        view = inflater.inflate(R.layout.work, container, false);
+        listView = view.findViewById(R.id.nameofperson);
 
-        return  view;
+        lsitper = new ArrayList<>();
+        requestholen();
+        database = Database.getInstance(view.getContext());
+        listView.setOnItemLongClickListener(this);
+
+        return view;
 
     }
 
-    private void requestholen(){
-        final FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference=firebaseDatabase.getReference().child("Reqest");
+    private void requestholen() {
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Reqest");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                 Iterable<DataSnapshot> id=dataSnapshot.getChildren();
-                String name="";
-                Log.i("schlu", "listViewFullen: "+name);
-               for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren() ){
-                    name+=dataSnapshot1.getKey()+"-";
-                   Log.i("schlu", "listViewFullen: "+name);
-                   Log.i("name", "onDataChange: "+name);
+                Iterable<DataSnapshot> id = dataSnapshot.getChildren();
+                String name = "";
+                Log.i("schlu", "listViewFullen: " + name);
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    name += dataSnapshot1.getKey() + "-";
+                    Log.i("schlu", "listViewFullen: " + name);
+                    Log.i("name", "onDataChange: " + name);
 
-               }
-               String [] key=name.split("-");
-                Log.i("schlu", "listViewFullen: "+key[0]);
-             listViewFullen(key);
-              // forderung(key);
+                }
+                String[] key = name.split("-");
+                Log.i("schlu", "listViewFullen: " + key[0]);
+                listViewFullen(key);
+                // forderung(key);
                 //name.add(forderung.getName());
                 //ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,name);
                 //listView.setAdapter(arrayAdapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.i("eror", "onCancelled: "+databaseError.toString());
+                Log.i("eror", "onCancelled: " + databaseError.toString());
 
             }
         });
-
-
 
 
     }
@@ -181,89 +174,64 @@ public class Work extends Fragment implements  View.OnClickListener{
 
     }
         */
-    @Override
-    public void onClick(View view) {
-        if(view.getId()==R.id.click){
-          Toast.makeText(view.getContext(),"dsa",Toast.LENGTH_LONG).show();
-
-        }else if(view.getId()==R.id.button){
-
-        }
-    }
 
 
-    public void listViewFullen(String []schlussel){
-        FirebaseFirestore firebaseDatabase=FirebaseFirestore.getInstance();
-        int i=0;
-        Log.i("schlu", "listViewFullen: "+schlussel[0]);
+    public void listViewFullen(String[] schlussel) {
+        FirebaseFirestore firebaseDatabase = FirebaseFirestore.getInstance();
+        int i = 0;
+        Log.i("schlu", "listViewFullen: " + schlussel[0]);
         do {
-            DocumentReference documentReference=firebaseDatabase.collection("benutzer").document(schlussel[i]);
+            DocumentReference documentReference = firebaseDatabase.collection("benutzer").document(schlussel[i]);
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DocumentSnapshot documentSnapshot=task.getResult();
-                        if(documentSnapshot.exists()){
-                            Map<String,Object>personMap=documentSnapshot.getData();
-                            Person person=new Person();
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if (documentSnapshot.exists()) {
+                            Map<String, Object> personMap = documentSnapshot.getData();
+                            Person person = new Person();
                             person.setEmail(personMap.get("Email").toString());
-                            database.daoData().deltetable();
-
-                                if(!database.daoData().check(personMap.get("id").toString())){
-                                    database.daoData().insert(new DataBestellung(personMap.get("id").toString(),personMap.get("Email").toString(),personMap.get("name").toString(),
-                                            personMap.get("Strasse").toString()
-                                            ,personMap.get("haus").toString(),personMap.get("plz").toString()));
-
-                                    name.add(personMap.get("id").toString());
-                                    ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,name);
-                                    listView.setAdapter(arrayAdapter);
-
-                                }
 
 
+                         //   if (!database.daoData().check(personMap.get("id").toString())) {
+                                database.daoData().insert(new DataBestellung(personMap.get("id").toString(), personMap.get("Email").toString(), personMap.get("name").toString(),
+                                        personMap.get("Strasse").toString()
+                                        , personMap.get("haus").toString(), personMap.get("plz").toString()));
+                                Log.i("malse", "onComplete: "+database.daoData().sele());
 
+                                Work.this.lsitper.add(personMap.get("id").toString());
+                                ArrayAdapter arrayAdapter = new ArrayAdapter(view.getContext(), R.layout.support_simple_spinner_dropdown_item, Work.this.lsitper);
+                                listView.setAdapter(arrayAdapter);
+                                Log.i("malse", "onComplete: "+personMap.get("id"));
 
-
-
-
-
+                           // }
 
 
                         }
                     }
 
 
-
                 }
             });
             i++;
-        }while (schlussel.length>i);
+        } while (schlussel.length > i);
 
     }
 
 
 
-}
-class adbter extends BaseAdapter{
-
 
     @Override
-    public int getCount() {
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+        String selectedView=((TextView) view).getText().toString();
+        Intent intent=new Intent(view.getContext(), Info.class);
+        Bundle bundle=new Bundle();
+        bundle.putString("key",selectedView);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        return false;
     }
 }
+
+
+
