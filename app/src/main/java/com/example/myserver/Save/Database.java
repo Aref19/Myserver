@@ -6,7 +6,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 
-@androidx.room.Database(entities = {DataBestellung.class}, version = 4)
+@androidx.room.Database(entities = {DataBestellung.class}, version = 6)
 public abstract class Database extends RoomDatabase {
   private  static Database INSTANCE;
   public abstract   DaoData daoData();

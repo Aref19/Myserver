@@ -27,4 +27,24 @@ public class Person {
     public String getEmail() {
         return Email;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
+    }
+
+    public void setHaus(String haus) {
+        this.haus = haus;
+    }
+
+    public void setPlz(String plz) {
+        this.plz = plz;
+    }
+
+    public void setStrasse(String strasse) {
+        this.strasse = strasse;
+    }
 }

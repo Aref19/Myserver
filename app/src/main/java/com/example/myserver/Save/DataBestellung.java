@@ -2,6 +2,7 @@ package com.example.myserver.Save;
 
 import android.provider.ContactsContract;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -12,24 +13,31 @@ import java.util.Date;
 @Entity(tableName = "bestellungen")
 public class DataBestellung {
     @PrimaryKey(autoGenerate = true)
-    private int  id;
+    private int idd;
+    private String id;
     private  String namePersEmail;
     private String name;
-    private  String anzahl;
+    private  String strasse;
     private String date;
+    private String plz;
 
-    public DataBestellung(String namePersEmail, String name, String anzahl, String date){
-this.namePersEmail=namePersEmail;
+    public DataBestellung( String id, String namePersEmail, String name, String strasse, String hausnummer,String plz){
+        this.namePersEmail=namePersEmail;
         this.name=name;
-        this.anzahl=anzahl;
-        this.date=date;
+        this.strasse=strasse;
+        this.date=hausnummer;
+        this.plz=plz;
+        this.id=id;
+    }
+    public DataBestellung(){
+
     }
 
-    public void setAnzahl(String anzahl) {
-        this.anzahl = anzahl;
+    public void setStrasse(String anzahl) {
+        this.strasse = anzahl;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -37,12 +45,12 @@ this.namePersEmail=namePersEmail;
         this.name = name;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public String getAnzahl() {
-        return anzahl;
+    public String getStrasse() {
+        return strasse;
     }
 
     public String getName() {
@@ -63,5 +71,21 @@ this.namePersEmail=namePersEmail;
 
     public void setNamePersEmail(String namePersEmail) {
         this.namePersEmail = namePersEmail;
+    }
+
+    public void setPlz(String plz) {
+        this.plz = plz;
+    }
+
+    public String getPlz() {
+        return plz;
+    }
+
+    public void setIdd(int idd) {
+        this.idd = idd;
+    }
+
+    public int getIdd() {
+        return idd;
     }
 }
