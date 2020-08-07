@@ -192,19 +192,21 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
                             Person person = new Person();
                             person.setEmail(personMap.get("Email").toString());
 
-
-                         //   if (!database.daoData().check(personMap.get("id").toString())) {
+                            Log.i("status", "onComplete: "+database.daoData().check(personMap.get("id").toString()));
+                      if (!database.daoData().check(personMap.get("id").toString())) {
                                 database.daoData().insert(new DataBestellung(personMap.get("id").toString(), personMap.get("Email").toString(), personMap.get("name").toString(),
                                         personMap.get("Strasse").toString()
                                         , personMap.get("haus").toString(), personMap.get("plz").toString()));
-                                Log.i("malse", "onComplete: "+database.daoData().sele());
-
+                              Log.i("malse", "onComplete: "+database.daoData().getsache(personMap.get("id").toString()).get(0).getName());
                                 Work.this.lsitper.add(personMap.get("id").toString());
                                 ArrayAdapter arrayAdapter = new ArrayAdapter(view.getContext(), R.layout.support_simple_spinner_dropdown_item, Work.this.lsitper);
                                 listView.setAdapter(arrayAdapter);
-                                Log.i("malse", "onComplete: "+personMap.get("id"));
 
-                           // }
+                            }else {
+                          Work.this.lsitper.add(personMap.get("id").toString());
+                          ArrayAdapter arrayAdapter = new ArrayAdapter(view.getContext(), R.layout.support_simple_spinner_dropdown_item, Work.this.lsitper);
+                          listView.setAdapter(arrayAdapter);
+                      }
 
 
                         }
@@ -227,6 +229,7 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
         Intent intent=new Intent(view.getContext(), Info.class);
         Bundle bundle=new Bundle();
         bundle.putString("key",selectedView);
+        bundle.putString("pos"  ,""+i);
         intent.putExtras(bundle);
         startActivity(intent);
         return false;

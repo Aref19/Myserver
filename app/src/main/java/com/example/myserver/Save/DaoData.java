@@ -13,22 +13,20 @@ public interface DaoData  {
 
     @Insert
     void insert(DataBestellung dataBestellung) ;
-    @Query("select * from bestellungen where namePersEmail= :id ")
+    @Query("select * from bestellungen where id= :id ")
     List<DataBestellung> getsache(String id);
     @Query("insert into bestellungen (date) VALUES (:date)")
     void inserdate(String date);
     @Query("insert into bestellungen (id) VALUES (:id)")
     void inserid(String id);
-    @Query("insert into bestellungen (name,strasse,date) values (:name,:strasse,:date)")
-    void inserNmaeAnzahl(String name, String strasse, String date);
       @Query("select Max(id) from bestellungen ")
        int sele();
     @Query("delete from bestellungen")
     void deltetable();
-    @Query("select * from bestellungen where namePersEmail= :id ")
-    boolean check(String id);
-    @Query("select * from bestellungen  ")
-    boolean checktable();
+    @Query("select * from bestellungen where id=:id")
+    boolean  check(String id);
+
+
 
 
 }

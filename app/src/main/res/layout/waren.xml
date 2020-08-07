@@ -41,10 +41,24 @@
               android:id="@+id/name"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:text="nme"></EditText>
+          android:text="nme"></EditText>
+          <Button
+              android:id="@+id/forder"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="forderung"
+              android:background="@drawable/button_round"
+              android:layout_alignParentBottom="true"
+              android:layout_margin="10dp"
+               android:drawableRight="@drawable/ic_requst"
+              android:onClick="forderung"
+
+              />
+
 
 
       </LinearLayout>
+
 
 
 
