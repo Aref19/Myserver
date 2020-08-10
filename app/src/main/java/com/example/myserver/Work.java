@@ -1,7 +1,6 @@
 package com.example.myserver;
 
 import android.content.Intent;
-import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,11 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,22 +63,27 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> id = dataSnapshot.getChildren();
+
                 String name = "";
                 Log.i("schlu", "listViewFullen: " + name);
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     name += dataSnapshot1.getKey() + "-";
-                    Log.i("schlu", "listViewFullen: " + name);
-                    Log.i("name", "onDataChange: " + name);
+
+
 
                 }
                 String[] key = name.split("-");
+                for (int i=0;i<key.length;i++){
+                    lsitper.add(key[i]);
+                }
                 Log.i("schlu", "listViewFullen: " + key[0]);
-                listViewFullen(key);
+              //  fordrungholen(key);
+              //  listViewFullen(key);
                 // forderung(key);
-                //name.add(forderung.getName());
-                //ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,name);
-                //listView.setAdapter(arrayAdapter);
+
+                ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,lsitper);
+                listView.setAdapter(arrayAdapter);
+
             }
 
             @Override
@@ -175,7 +177,7 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
     }
         */
 
-
+/*
     public void listViewFullen(String[] schlussel) {
         FirebaseFirestore firebaseDatabase = FirebaseFirestore.getInstance();
         int i = 0;
@@ -191,10 +193,9 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
                             Map<String, Object> personMap = documentSnapshot.getData();
                             Person person = new Person();
                             person.setEmail(personMap.get("Email").toString());
-
                             Log.i("status", "onComplete: "+database.daoData().check(personMap.get("id").toString()));
-                      if (!database.daoData().check(personMap.get("id").toString())) {
-                                database.daoData().insert(new DataBestellung(personMap.get("id").toString(), personMap.get("Email").toString(), personMap.get("name").toString(),
+                    //  if (!database.daoData().check(personMap.get("id").toString())) {
+                      //          database.daoData().insert(new DataBestellung(personMap.get("id").toString(), personMap.get("Email").toString(), personMap.get("name").toString(),
                                         personMap.get("Strasse").toString()
                                         , personMap.get("haus").toString(), personMap.get("plz").toString()));
                               Log.i("malse", "onComplete: "+database.daoData().getsache(personMap.get("id").toString()).get(0).getName());
@@ -202,10 +203,10 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
                                 ArrayAdapter arrayAdapter = new ArrayAdapter(view.getContext(), R.layout.support_simple_spinner_dropdown_item, Work.this.lsitper);
                                 listView.setAdapter(arrayAdapter);
 
-                            }else {
-                          Work.this.lsitper.add(personMap.get("id").toString());
-                          ArrayAdapter arrayAdapter = new ArrayAdapter(view.getContext(), R.layout.support_simple_spinner_dropdown_item, Work.this.lsitper);
-                          listView.setAdapter(arrayAdapter);
+                          //  }else {
+                          //Work.this.lsitper.add(personMap.get("id").toString());
+                          //ArrayAdapter arrayAdapter = new ArrayAdapter(view.getContext(), R.layout.support_simple_spinner_dropdown_item, Work.this.lsitper);
+                          //listView.setAdapter(arrayAdapter);
                       }
 
 
@@ -213,14 +214,14 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
                     }
 
 
-                }
-            });
+           //     }
+         //   });
             i++;
-        } while (schlussel.length > i);
+        //} while (schlussel.length > i);
 
     }
 
-
+ */
 
 
     @Override
@@ -234,6 +235,16 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
         startActivity(intent);
         return false;
     }
+    private void fordrungholen(String []requst){
+
+        int i=0;
+        do {
+
+            i++;
+      }while (requst.length>i);
+    }
+
+
 }
 
 

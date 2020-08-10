@@ -1,25 +1,25 @@
 package com.example.myserver.Save1;
 
-public class Brobe {
+public class Fordrung0 {
     private String image;
-    private  String anzahl;
+    private  int anzahl;
     private String name;
-    private String id;
+    private int  id;
 
-    public  Brobe(String image,String anzahl,String name,String id){
+    public Fordrung0(String image, int  anzahl, String name, int  id){
         this.anzahl=anzahl;
         this.image=image;
         this.name=name;
         this.id=id;
     }
 
-    public Brobe(){}
+    public Fordrung0(){}
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -31,11 +31,11 @@ public class Brobe {
         return name;
     }
 
-    public void setAnzahl(String anzahl) {
+    public void setAnzahl(int anzahl) {
         this.anzahl = anzahl;
     }
 
-    public String getAnzahl() {
+    public long getAnzahl() {
         return anzahl;
     }
 
