@@ -67,6 +67,7 @@ public class Home extends Fragment implements View.OnClickListener {
         storage = FirebaseStorage.getInstance();
         Choildern.context = view.getContext();
         Log.i("context", "onCreateView: " + context);
+        preis.setError(null);
         return view;
     }
 
@@ -88,7 +89,6 @@ public class Home extends Fragment implements View.OnClickListener {
 
 
     private void imageStroge() {
-
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference(name.getText().toString().trim().toLowerCase());
         // Get the data from an ImageView as bytes
@@ -197,6 +197,35 @@ public class Home extends Fragment implements View.OnClickListener {
     private void fugdata(int i, String image) {
         num = i;
         im = image;
+
+    }
+
+    private void imageStroge2() {
+
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReference(name.getText().toString().trim().toLowerCase());
+        // Get the data from an ImageView as bytes
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = storageRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.i("sucss", "onFailure: " + "sucss");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+
+            }
+        });
 
     }
 

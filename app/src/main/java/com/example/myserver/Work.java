@@ -31,15 +31,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 public class Work extends Fragment implements ListView.OnItemLongClickListener {
     View view;
     ListView listView;
     ArrayList<String> lsitper;
+    Calendar date;
+    TextView news;
 
     Button button, button1;
     Database database;
+        Calendar calendar;
 
 
     @Nullable
@@ -47,11 +52,12 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.work, container, false);
         listView = view.findViewById(R.id.nameofperson);
-
         lsitper = new ArrayList<>();
         requestholen();
         database = Database.getInstance(view.getContext());
         listView.setOnItemLongClickListener(this);
+        news=view.findViewById(R.id.news);
+        calendar=Calendar.getInstance();
 
         return view;
 
@@ -68,21 +74,20 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
                 Log.i("schlu", "listViewFullen: " + name);
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     name += dataSnapshot1.getKey() + "-";
-
-
-
                 }
                 String[] key = name.split("-");
-                for (int i=0;i<key.length;i++){
+                for (int i=0;i<key.length;i++) {
                     lsitper.add(key[i]);
+
                 }
+
                 Log.i("schlu", "listViewFullen: " + key[0]);
               //  fordrungholen(key);
               //  listViewFullen(key);
-                // forderung(key);
+                 forderung(key);
 
-                ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,lsitper);
-                listView.setAdapter(arrayAdapter);
+                     ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,lsitper);
+                     listView.setAdapter(arrayAdapter);
 
             }
 
@@ -95,67 +100,56 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
 
 
     }
-/*
+
 
     private void forderung(final String [] keys){
+        FirebaseFirestore firebaseFirestore=FirebaseFirestore.getInstance();
         final FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
         int v=0;
-        forRequ=new ArrayList<>();
-        forPerson=new ArrayList<>();
-        namePerson=new ArrayList<>();
         Log.i("keys", "forderung: "+keys.length);
+        final ArrayList<String > strings=new ArrayList<>();
    do {
-            Log.i("keys", "forderung: "+keys[1]);
-        DatabaseReference databaseReference=firebaseDatabase.getReference().child("Reqest").child(keys[v]);
+        DocumentReference documentReference=firebaseFirestore.collection("Request").document(keys[v]).collection(keys[v]).document();
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot documentReference=task.getResult();
+                if(documentReference.exists()){
+                    Map<String,Object>f=documentReference.getData();
+                    Log.i("name", "onComplete: "+f.get("name"));
+                }
+                Log.i("task1", "onComplete: "+task.isSuccessful());
 
+            }
+        });
+        DatabaseReference databaseReference=firebaseDatabase.getReference().child("Request").child(keys[v]).child(keys[v]);
+        final int j=v;
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int j=0;
+                 String name="";
 
-                Forderung [] arrayforderung;
-                Map<String, Forderung[]> stringForderungMap=new HashMap<>();
-                Person person=new Person();
-                person = dataSnapshot.getValue(Person.class);
-                forPerson.add(person);
-                namePerson.add( person.getName()+ " | "+ person.getEmail());
-                String namepersonemail=person.getName()+person.getEmail();
-                Log.i("save", "onDataChange: "+namepersonemail);
-                ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,namePerson);
-                listView.setAdapter(arrayAdapter);
-                int anzahl=(int)dataSnapshot.child("forderung").getChildrenCount();
-                 arrayforderung=new Forderung[anzahl];
-                 for (int i=0;i<anzahl;i++){
-                     Forderung forderung=new Forderung();
-                     forderung=  dataSnapshot.child("forderung").child(String.valueOf(i)).getValue(Forderung.class);
-                     forRequ.add(forderung);
-                     arrayforderung[i]=forderung;
-                     Log.i("i", "onDataChange: "+i);
-                     if(anzahl==(i+1)){
-                         stringForderungMap.put(name+person.getEmail(),arrayforderung);
-                         Log.i("save", "onDataChange: "+name+person.getEmail());
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                      name+=dataSnapshot1.getKey()+",";
+                    Log.i("name", "onDataChange: "+name);
 
-                         Date date=new Date();
-                            for (int v=0;v<arrayforderung.length;v++){
-                               // database.daoData().inserNmaeAnzahl(arrayforderung[i].getName(),String.valueOf(arrayforderung[i].anzahl),date.toString(),v);
-                              // database.daoData().insert(new DataBestellung(namepersonemail,arrayforderung[i].getName(),String.valueOf(arrayforderung[i].anzahl),date.toString()));
-                                Log.i("mal", "onLongClick: "+"dsaasdasd");
+                }
+                String [] dat=name.split(",");
 
-                            }
+                int day=calendar.get(Calendar.DAY_OF_MONTH);
+                for(int i=0;i<name.split(",").length;i++){
+                    Log.i("welche", "onDataChange: "+dat[i]);
+                    if(dat[i].contains(""+day)){
+                        strings.add(""+j);
+                    }
 
+                }        String welche="";
+                for(int j=0;j<strings.size();j++){
+                      welche +=strings.get(j)+",";
+                      news.setText(welche);
+                }
 
-                     }
-
-                 }
-                 j++;
-
-
-
-
-                //name.add(forderung.getName());
-                //ArrayAdapter arrayAdapter=new ArrayAdapter(view.getContext(),R.layout.support_simple_spinner_dropdown_item,name);
-                //listView.setAdapter(arrayAdapter);
 
         }
 
@@ -175,7 +169,7 @@ public class Work extends Fragment implements ListView.OnItemLongClickListener {
      
 
     }
-        */
+
 
 /*
     public void listViewFullen(String[] schlussel) {
